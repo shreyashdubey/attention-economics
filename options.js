@@ -94,6 +94,19 @@ async function save() {
   setTimeout(() => status.classList.remove("show"), 1500);
 }
 
+// Master switch writes immediately. Turning OFF requires the arming sequence;
+// turning ON is instant.
+$("enabled").addEventListener("change", async (e) => {
+  if (!e.target.checked) {
+    const ok = await window.confirmPowerDown();
+    if (!ok) {
+      e.target.checked = true;
+      return;
+    }
+  }
+  await chrome.storage.sync.set({ enabled: e.target.checked });
+});
+
 $("addWindow").addEventListener("click", () => {
   renderWindows([...readWindows(), { start: "23:00", end: "06:00" }]);
 });

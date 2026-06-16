@@ -53,14 +53,19 @@ async function render() {
 }
 
 document.getElementById("enabled").addEventListener("change", async (e) => {
+  // Turning OFF requires the arming sequence; turning ON is instant.
+  if (!e.target.checked) {
+    const ok = await window.confirmPowerDown();
+    if (!ok) {
+      e.target.checked = true; // reverting in JS does not re-fire change
+      return;
+    }
+  }
   await chrome.storage.sync.set({ enabled: e.target.checked });
   render();
 });
-document.getElementById("options").addEventListener("click", () =>
+document.getElementById("open").addEventListener("click", () =>
   chrome.runtime.openOptionsPage()
-);
-document.getElementById("stats").addEventListener("click", () =>
-  chrome.tabs.create({ url: chrome.runtime.getURL("stats.html") })
 );
 
 render();

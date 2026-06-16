@@ -3,103 +3,239 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Focus Guard — Settings</title>
+    <link rel="stylesheet" href="te.css" />
+    <title>FG-1 — console</title>
     <style>
-      :root { color-scheme: light dark; }
-      * { box-sizing: border-box; }
-      body {
-        margin: 0;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        background: #f6f7f9; color: #111827; padding: 40px 20px;
+      body { background: #c4c4c8; padding: 40px 18px 64px; font-size: 15px; }
+      .console { max-width: 760px; margin: 0 auto; padding: 30px 30px 34px; }
+
+      /* ---- header ---- */
+      .head {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        border-bottom: 1px solid var(--g4);
+        padding-bottom: 18px;
+        margin-bottom: 6px;
       }
-      .wrap { max-width: 580px; margin: 0 auto; }
-      h1 { font-size: 22px; margin: 0 0 4px; }
-      .sub { color: #6b7280; font-size: 14px; margin: 0 0 28px; }
-      .card {
-        background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
-        padding: 22px; margin-bottom: 18px;
+      .head .brand { display: flex; align-items: baseline; gap: 14px; }
+      .head .brand .m { font-size: 32px; }
+      .head .brand .sub { font-size: 12px; letter-spacing: 0.18em; }
+      .head .right { display: flex; align-items: center; gap: 10px; }
+      .head .right .te-label { font-size: 11px; color: var(--g6); }
+
+      /* ---- zone label ---- */
+      .zone {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 26px 0 16px;
       }
-      label { font-weight: 600; font-size: 14px; display: block; margin-bottom: 8px; }
-      input[type="time"], textarea {
-        padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 8px;
-        font-size: 14px; font-family: inherit; background: #fff; color: #111827;
+      .zone .te-label { font-size: 13px; letter-spacing: 0.2em; color: var(--g8); }
+      .zone .line { flex: 1; height: 1px; background: var(--g3); }
+      .zone .te-fig { font-size: 11px; }
+
+      /* ---- progress readouts ---- */
+      .readouts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 16px; }
+      .ro { padding: 20px 16px; text-align: center; }
+      .ro .n { font-family: var(--font-pixel); font-size: 38px; color: var(--screen-green); margin-bottom: 12px; line-height: 1; }
+      .ro.accent .n { color: var(--te-orange); }
+      .ro .l { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--screen-dim); }
+
+      .chart-wrap { padding: 20px 20px 16px; }
+      .chart-head { display: flex; justify-content: space-between; margin-bottom: 18px; }
+      .chart-head .te-label { color: var(--screen-dim); font-size: 11px; }
+      .chart { display: flex; align-items: flex-end; gap: 12px; height: 132px; }
+      .bar { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 7px; height: 100%; justify-content: flex-end; }
+      .bar .v { font-family: var(--font-mono); font-size: 12px; color: var(--screen-green); min-height: 14px; font-weight: 700; }
+      .bar .fill { width: 100%; background: var(--te-orange); min-height: 4px; box-shadow: 0 0 10px rgba(254,80,0,0.4); }
+      .bar .d { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--screen-dim); }
+
+      /* ---- control modules ---- */
+      .module { padding: 22px 0; border-bottom: 1px solid var(--g3); }
+      .module:last-of-type { border-bottom: 0; }
+      .module-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px; }
+      .module-head .te-label { font-size: 12px; letter-spacing: 0.16em; color: var(--g7); }
+      .module-head .te-fig { font-size: 10px; }
+
+      label.field-l {
+        display: block;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--g6);
+        margin-bottom: 9px;
+        font-weight: 700;
       }
-      textarea { width: 100%; min-height: 150px; resize: vertical; line-height: 1.6; }
-      .hint { color: #6b7280; font-size: 12px; margin-top: 8px; }
-      .toggle { display: flex; align-items: center; gap: 10px; }
-      .toggle input { width: 18px; height: 18px; }
-      .toggle label { margin: 0; }
-      .win-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-      .win-row .to { color: #6b7280; font-size: 13px; }
-      .win-row button {
-        background: transparent; color: #ef4444; border: 1px solid #fecaca;
-        padding: 6px 10px; border-radius: 8px; font-size: 12px; cursor: pointer;
+      input[type="time"], input[type="number"], textarea {
+        font-family: var(--font-mono);
+        font-size: 16px;
+        background: #fbfbfc;
+        color: var(--g8);
+        border: 1px solid var(--g4);
+        border-radius: 0;
+        padding: 11px 13px;
       }
+      input[type="time"]:focus, input[type="number"]:focus, textarea:focus { outline: 2px solid var(--te-orange); outline-offset: -1px; }
+      textarea { width: 100%; min-height: 168px; resize: vertical; line-height: 1.8; font-size: 15px; }
+
+      .enable-row { display: flex; align-items: center; justify-content: space-between; }
+      .enable-row .t { font-family: var(--font-grotesk); font-size: 17px; font-weight: 700; }
+      .enable-row .te-label { font-size: 10px; display: block; margin-top: 3px; color: var(--g5); }
+
+      .win-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+      .win-row .to { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.1em; color: var(--g6); text-transform: uppercase; }
+      .win-row .remove {
+        font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+        background: transparent; color: var(--g6); border: 1px solid var(--g4); border-radius: 0;
+        padding: 9px 13px; cursor: pointer;
+      }
+      .win-row .remove:hover { background: var(--te-orange); color: #fff; border-color: var(--te-orange-press); }
       .addwin {
-        background: #eef2ff; color: #4338ca; border: 1px solid #e0e7ff;
-        padding: 8px 14px; border-radius: 8px; font-size: 13px; cursor: pointer;
+        font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
+        background: var(--g8); color: #fff; border: 1px solid var(--te-true-black); border-radius: 0;
+        padding: 11px 16px; cursor: pointer; margin-top: 6px;
       }
-      .inline { display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-end; }
-      .inline .field { flex: 1; min-width: 150px; }
-      button.primary {
-        background: #2563eb; color: #fff; border: none; padding: 12px 22px;
-        border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer;
-      }
-      button.primary:hover { background: #1d4ed8; }
-      .status { margin-left: 14px; color: #16a34a; font-size: 14px; opacity: 0; transition: opacity .2s; }
+      .addwin:hover { background: var(--g7); }
+
+      .inline { display: flex; gap: 20px; flex-wrap: wrap; }
+      .inline .f { flex: 1; min-width: 170px; }
+
+      .hint { font-family: var(--font-grotesk); color: var(--g6); font-size: 14px; margin-top: 12px; line-height: 1.7; }
+      .hint code { font-family: var(--font-mono); font-size: 13px; background: #e4e4e7; padding: 1px 4px; }
+
+      .note { font-family: var(--font-grotesk); color: var(--g6); font-size: 15px; line-height: 1.8; }
+
+      .save-row { display: flex; align-items: center; gap: 18px; margin-top: 28px; }
+      .save-row .te-btn { font-size: 14px; padding: 14px 28px; }
+      .status { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--enc-green); opacity: 0; transition: opacity 0.2s; }
       .status.show { opacity: 1; }
-      a.statslink { color: #2563eb; font-size: 14px; text-decoration: none; }
-      @media (prefers-color-scheme: dark) {
-        body { background: #0b0f17; color: #e5e7eb; }
-        .card { background: #111827; border-color: #1f2937; }
-        input[type="time"], textarea { background: #0b0f17; border-color: #1f2937; color: #e5e7eb; }
-        .sub, .hint, .win-row .to { color: #9ca3af; }
-        .addwin { background: #1e1b4b; color: #c7d2fe; border-color: #312e81; }
+
+      .foot { display: flex; justify-content: space-between; margin-top: 28px; }
+      .foot .te-fig { font-size: 10px; }
+
+      /* ---- boot-up motion ---- */
+      @media (prefers-reduced-motion: no-preference) {
+        @keyframes boot { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+        @keyframes screenOn { 0% { opacity: 0; } 7% { opacity: 0.55; } 11% { opacity: 0.15; } 22% { opacity: 1; } 100% { opacity: 1; } }
+        .head, .zone, .readouts, .chart-wrap, .module, .note-mod, .save-row, .foot { animation: boot 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+        .zone { animation-delay: 0.05s; }
+        .readouts { animation-delay: 0.1s; }
+        .chart-wrap { animation-delay: 0.16s; }
+        .module:nth-of-type(1) { animation-delay: 0.22s; }
+        .module:nth-of-type(2) { animation-delay: 0.27s; }
+        .module:nth-of-type(3) { animation-delay: 0.32s; }
+        .module:nth-of-type(4) { animation-delay: 0.37s; }
+        .note-mod { animation-delay: 0.42s; }
+        .save-row { animation-delay: 0.46s; }
+        .te-screen { animation: screenOn 0.7s steps(1, end) both; }
+        .ro { animation-delay: 0.12s; }
+        .chart-wrap.te-screen { animation-delay: 0.18s; }
       }
     </style>
   </head>
   <body>
-    <div class="wrap">
-      <h1>Focus Guard</h1>
-      <p class="sub">Block distracting sites during the hours you choose · <a class="statslink" href="stats.html">View your progress →</a></p>
+    <div class="te-plate console">
+      <span class="te-screw tl"></span><span class="te-screw tr"></span>
+      <span class="te-screw bl"></span><span class="te-screw br"></span>
 
-      <div class="card">
-        <div class="toggle">
-          <input type="checkbox" id="enabled" />
-          <label for="enabled">Blocking enabled</label>
+      <div class="head">
+        <div class="brand">
+          <span class="te-model m">FG&ndash;1</span>
+          <span class="te-label sub">focus&nbsp;guard&nbsp;console</span>
+        </div>
+        <div class="right">
+          <span class="te-label">unit&nbsp;online</span>
+          <span class="te-led green"></span>
         </div>
       </div>
 
-      <div class="card">
-        <label>Block windows (your local time)</label>
+      <!-- ===== MONITOR / PROGRESS ===== -->
+      <div class="zone">
+        <span class="te-label">monitor</span>
+        <span class="line"></span>
+        <span class="te-fig">fig.a &mdash; readout</span>
+      </div>
+
+      <div class="readouts">
+        <div class="te-screen ro accent"><div class="n" id="today">0</div><div class="l">intercepts today</div></div>
+        <div class="te-screen ro"><div class="n" id="streak">0</div><div class="l">day streak</div></div>
+        <div class="te-screen ro"><div class="n" id="reclaimed">0m</div><div class="l">est. reclaimed</div></div>
+      </div>
+
+      <div class="te-screen chart-wrap">
+        <div class="chart-head">
+          <span class="te-label">last 7 days &mdash; intercepts</span>
+          <span class="te-fig screen-dim">fig.b</span>
+        </div>
+        <div class="chart" id="chart"></div>
+      </div>
+
+      <!-- ===== CONTROLS / SETTINGS ===== -->
+      <div class="zone">
+        <span class="te-label">controls</span>
+        <span class="line"></span>
+        <span class="te-fig">fig.c &mdash; setup</span>
+      </div>
+
+      <div class="module">
+        <div class="module-head"><span class="te-label">01 / power</span><span class="te-fig">main</span></div>
+        <div class="enable-row">
+          <div>
+            <span class="t">blocking enabled</span>
+            <span class="te-label">master power switch</span>
+          </div>
+          <input type="checkbox" id="enabled" class="te-switch" />
+        </div>
+      </div>
+
+      <div class="module">
+        <div class="module-head"><span class="te-label">02 / block windows</span><span class="te-fig">local time</span></div>
         <div id="windows"></div>
-        <button class="addwin" id="addWindow">+ Add a window</button>
-        <div class="hint">Sites are blocked during any window. Overnight windows (e.g. 23:00 → 06:00) are fine.</div>
+        <button class="addwin" id="addWindow">+ add window</button>
+        <div class="hint">Sites are blocked during any window. Overnight windows (23:00 &rarr; 06:00) are supported.</div>
       </div>
 
-      <div class="card">
-        <label for="sites">Blocked sites</label>
+      <div class="module">
+        <div class="module-head"><span class="te-label">03 / blocked sites</span><span class="te-fig">domains</span></div>
+        <label class="field-l" for="sites">one domain per line</label>
         <textarea id="sites" spellcheck="false"></textarea>
-        <div class="hint">One domain per line. Subdomains match automatically (<code>youtube.com</code> also covers <code>m.youtube.com</code>).</div>
+        <div class="hint">Subdomains match automatically &mdash; <code>youtube.com</code> also covers <code>m.youtube.com</code>.</div>
       </div>
 
-      <div class="card">
+      <div class="module">
+        <div class="module-head"><span class="te-label">04 / readout config</span><span class="te-fig">summary</span></div>
         <div class="inline">
-          <div class="field">
-            <label for="summaryTime">Daily summary at</label>
+          <div class="f">
+            <label class="field-l" for="summaryTime">daily summary at</label>
             <input type="time" id="summaryTime" />
           </div>
-          <div class="field">
-            <label for="minutesPerBlockNum">Minutes saved per intercept (estimate)</label>
-            <input type="number" id="minutesPerBlockNum" min="1" max="120" style="padding:10px 12px;border:1px solid #d1d5db;border-radius:8px;width:100%;font-size:14px;" />
+          <div class="f">
+            <label class="field-l" for="minutesPerBlockNum">min saved / intercept</label>
+            <input type="number" id="minutesPerBlockNum" min="1" max="120" style="width:100%" />
           </div>
         </div>
-        <div class="hint">Used only to estimate "time reclaimed" on your progress page.</div>
+        <div class="hint">Used only to estimate "time reclaimed" on the monitor above.</div>
       </div>
 
-      <button class="primary" id="save">Save</button>
-      <span class="status" id="status">Saved ✓</span>
+      <div class="save-row">
+        <button class="te-btn" id="save">save settings</button>
+        <span class="status" id="status">&#10003; saved &mdash; reload monitor to refresh</span>
+      </div>
+
+      <div class="note-mod module">
+        <div class="module-head"><span class="te-label">note / what this measures</span></div>
+        <p class="note" id="encourage"></p>
+      </div>
+
+      <div class="foot">
+        <span class="te-fig">FG&ndash;1 &middot; engineered focus &middot; v1.1</span>
+        <span class="te-fig">every intercept = one rep</span>
+      </div>
     </div>
+    <script src="arming.js"></script>
     <script src="options.js"></script>
+    <script src="stats.js"></script>
   </body>
 </html>

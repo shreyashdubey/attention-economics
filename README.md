@@ -14,13 +14,19 @@ you choose, counts the urges it intercepts, and shows your daily progress.
 ## Use
 
 - **Toolbar popup** — quick on/off toggle, current status, and today's intercept
-  count.
-- **Settings** — add one or more block windows (e.g. `07:00–21:00` for work and
-  `23:00–06:00` for sleep), edit the blocked-site list, set the daily-summary
-  time.
-- **Progress page** — intercepts today, day streak, estimated time reclaimed, and
-  a 7-day chart.
+  count. "Open console" opens the single full-page console.
+- **Console** (one page, opens via the popup or extension options) — combines:
+  - _Monitor_: intercepts today, day streak, estimated time reclaimed, 7-day chart.
+  - _Controls_: block windows (e.g. `07:00–21:00` for work and `23:00–06:00` for
+    sleep), the blocked-site list, daily-summary time.
 - **Daily summary** — a notification at your chosen time recapping the day.
+- **Power-down sequence** — turning blocking OFF is deliberately hard: flip three
+  safety switches, then hold a button for 3 seconds. Turning it back ON is instant.
+  (This is the friction that stops a weak-moment one-click disable.)
+
+The whole UI is styled after Teenage Engineering (OP‑1 / OP‑XY): brushed-aluminum
+faceplates, International Orange `#fe5000`, encoder knobs, OLED display screens,
+and bundled Space Mono + Silkscreen fonts (see `te.css`).
 
 ## How it works
 
@@ -50,7 +56,10 @@ storage on your machine. Nothing is sent anywhere.
 | `manifest.json`   | Extension manifest                           |
 | `background.js`   | Service worker — blocking + stats + summary  |
 | `blocked.html/js` | The page shown when a site is blocked        |
-| `options.html/js` | Settings (windows, sites, summary time)      |
-| `stats.html/js`   | Your progress dashboard                      |
+| `options.html`    | The single console (monitor + controls)      |
+| `options.js`      | Settings logic (windows, sites, summary)     |
+| `stats.js`        | Monitor logic (counts, streak, chart)        |
 | `popup.html/js`   | Toolbar popup                                |
+| `te.css`          | Teenage Engineering design system            |
+| `fonts/`          | Space Mono + Silkscreen (bundled, OFL)       |
 | `icons/`          | Extension icons                              |

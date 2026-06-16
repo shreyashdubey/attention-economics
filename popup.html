@@ -2,40 +2,128 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <link rel="stylesheet" href="te.css" />
     <style>
-      body {
-        width: 250px; margin: 0; padding: 16px;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        background: #111827; color: #e5e7eb;
+      body { width: 288px; }
+      .device { padding: 14px 14px 16px; }
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
       }
-      h2 { margin: 0 0 12px; font-size: 15px; }
-      .state { font-size: 13px; color: #9ca3af; margin-bottom: 14px; line-height: 1.5; }
-      .badge { font-weight: 600; }
-      .badge.on { color: #f87171; }
-      .badge.off { color: #34d399; }
-      .today { font-size: 13px; margin-bottom: 14px; }
-      .today b { color: #34d399; }
-      .toggle { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
-      .row { display: flex; gap: 8px; }
-      button {
-        flex: 1; background: #1f2937; color: #e5e7eb; border: 1px solid #374151;
-        padding: 9px; border-radius: 8px; font-size: 13px; cursor: pointer;
+      .brand { display: flex; align-items: baseline; gap: 8px; }
+      .brand .m { font-size: 18px; }
+      .brand .sub { font-size: 9px; }
+      .pwr { display: flex; align-items: center; gap: 6px; }
+
+      .screen { padding: 12px 12px; margin-bottom: 14px; }
+      .screen .stat-line {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.04em;
+        color: var(--screen-fg);
+        margin-bottom: 10px;
       }
-      button:hover { background: #374151; }
+      .screen .badge { font-weight: 700; }
+      .screen .badge.on { color: var(--te-orange); }
+      .screen .badge.off { color: var(--screen-green); }
+      .screen .today {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--screen-dim);
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        border-top: 1px solid #20222a;
+        padding-top: 9px;
+      }
+      .screen .today b {
+        font-family: var(--font-pixel);
+        font-size: 20px;
+        color: var(--screen-green);
+        letter-spacing: 0;
+      }
+
+      .knobs {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 2px 6px 14px;
+      }
+      .knob-cell { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+      .knob-cell .te-label { font-size: 8px; }
+
+      .ctrl {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-top: 1px solid var(--g3);
+        padding-top: 13px;
+        margin-bottom: 12px;
+      }
+      .ctrl .lbl { display: flex; flex-direction: column; gap: 2px; }
+      .ctrl .lbl .t { font-family: var(--font-grotesk); font-size: 13px; font-weight: 700; }
+
+      .actions { display: flex; }
+      .actions .te-btn--ghost { flex: 1; padding: 11px; font-size: 11px; }
+
+      .footer {
+        margin-top: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
     </style>
   </head>
   <body>
-    <h2>Focus Guard</h2>
-    <div class="state" id="state">Loading…</div>
-    <div class="today" id="today"></div>
-    <div class="toggle">
-      <input type="checkbox" id="enabled" />
-      <label for="enabled">Enabled</label>
+    <div class="te-plate device">
+      <span class="te-screw tl"></span><span class="te-screw tr"></span>
+      <span class="te-screw bl"></span><span class="te-screw br"></span>
+
+      <div class="topbar">
+        <div class="brand">
+          <span class="te-model m">FG&ndash;1</span>
+          <span class="te-label sub">focus&nbsp;guard</span>
+        </div>
+        <div class="pwr">
+          <span class="te-label">pwr</span>
+          <span class="te-led green" id="pwrLed"></span>
+        </div>
+      </div>
+
+      <div class="te-screen screen">
+        <div class="stat-line" id="state">loading&hellip;</div>
+        <div class="today" id="today"></div>
+      </div>
+
+      <div class="knobs">
+        <div class="knob-cell"><span class="te-knob blue" style="--rot:-120deg"></span><span class="te-label">site</span></div>
+        <div class="knob-cell"><span class="te-knob green" style="--rot:-40deg"></span><span class="te-label">time</span></div>
+        <div class="knob-cell"><span class="te-knob white" style="--rot:30deg"></span><span class="te-label">days</span></div>
+        <div class="knob-cell"><span class="te-knob orange" style="--rot:110deg"></span><span class="te-label">mode</span></div>
+      </div>
+
+      <div class="ctrl">
+        <div class="lbl">
+          <span class="t">blocking</span>
+          <span class="te-label">power&nbsp;switch</span>
+        </div>
+        <input type="checkbox" id="enabled" class="te-switch" />
+      </div>
+
+      <div class="actions">
+        <button id="open" class="te-btn--ghost te-btn">open console</button>
+      </div>
+
+      <div class="footer">
+        <span class="te-fig">fig.01 &mdash; control unit</span>
+        <span class="te-fig">v1.1</span>
+      </div>
     </div>
-    <div class="row">
-      <button id="stats">Progress</button>
-      <button id="options">Settings</button>
-    </div>
+    <script src="arming.js"></script>
     <script src="popup.js"></script>
   </body>
 </html>

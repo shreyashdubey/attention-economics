@@ -1,0 +1,346 @@
+/* ============================================================
+   FG-1 — Teenage Engineering design system
+   Sources: teenage.engineering (Univers), OP-XY aluminum mono-ramp,
+   OP-1 International Orange #fe5000, 4-encoder color coding.
+   ============================================================ */
+
+@font-face {
+  font-family: "Space Mono";
+  src: url("fonts/spacemono-400.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Space Mono";
+  src: url("fonts/spacemono-700.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Silkscreen";
+  src: url("fonts/silkscreen-400.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Silkscreen";
+  src: url("fonts/silkscreen-700.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+
+:root {
+  /* signature */
+  --te-orange: #fe5000;
+  --te-orange-press: #d04200;
+  --te-true-black: #000000;
+
+  /* OP-XY aluminum mono-ramp */
+  --g1: #f6f4f4;
+  --g2: #afafb3;
+  --g3: #95959a;
+  --g4: #797982;
+  --g5: #606069;
+  --g6: #484850;
+  --g7: #2f2f36;
+  --g8: #16161d;
+
+  /* OP-1 four-encoder color code */
+  --enc-blue: #2b6fe5;
+  --enc-green: #36b34a;
+  --enc-white: #f2f2f2;
+  --enc-orange: #fe5000;
+
+  /* OLED display */
+  --screen-bg: #0c0d11;
+  --screen-fg: #eef0ea;
+  --screen-green: #9bff5b;
+  --screen-dim: #949a86;
+
+  /* type */
+  --font-grotesk: "Helvetica Neue", Helvetica, Arial, "Univers", sans-serif;
+  --font-mono: "Space Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --font-pixel: "Silkscreen", "Space Mono", monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: var(--font-grotesk);
+  color: var(--g8);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---- aluminum faceplate -------------------------------------------------- */
+.te-plate {
+  background: linear-gradient(180deg, #ececee 0%, #dcdce0 48%, #d2d2d6 100%);
+  background-color: #dcdce0;
+  /* fine brushed lines */
+  background-image: repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.5) 0,
+      rgba(255, 255, 255, 0.5) 1px,
+      rgba(0, 0, 0, 0.02) 1px,
+      rgba(0, 0, 0, 0.02) 2px
+    ),
+    linear-gradient(180deg, #ececee 0%, #dcdce0 48%, #d2d2d6 100%);
+  border: 1px solid var(--g4);
+  position: relative;
+}
+
+/* corner screws */
+.te-screw {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #fafafa, #b9b9be 70%, #8d8d92);
+  border: 1px solid #9a9a9f;
+}
+.te-screw::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border-top: 1px solid #7c7c82;
+  transform: rotate(35deg);
+  transform-origin: center;
+}
+.te-screw.tl { top: 7px; left: 7px; }
+.te-screw.tr { top: 7px; right: 7px; }
+.te-screw.bl { bottom: 7px; left: 7px; }
+.te-screw.br { bottom: 7px; right: 7px; }
+
+/* ---- technical labels ---------------------------------------------------- */
+.te-label {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 9px;
+  color: var(--g5);
+  font-weight: 700;
+}
+.te-fig {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: var(--g4);
+  text-transform: lowercase;
+}
+.te-model {
+  font-family: var(--font-grotesk);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--g8);
+}
+.te-divider { height: 1px; background: var(--g3); border: 0; margin: 0; }
+
+/* ---- OLED screen --------------------------------------------------------- */
+.te-screen {
+  background: var(--screen-bg);
+  color: var(--screen-fg);
+  border: 1px solid var(--te-true-black);
+  position: relative;
+  overflow: hidden;
+}
+/* scanline / pixel grid overlay */
+.te-screen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 0.035) 0,
+    rgba(255, 255, 255, 0.035) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+.te-screen .pix {
+  font-family: var(--font-pixel);
+  line-height: 1.4;
+}
+.te-screen .mono { font-family: var(--font-mono); }
+.screen-green { color: var(--screen-green); }
+.screen-orange { color: var(--te-orange); }
+.screen-dim { color: var(--screen-dim); }
+
+/* ---- buttons ------------------------------------------------------------- */
+.te-btn {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--te-orange);
+  color: #fff;
+  border: 1px solid var(--te-orange-press);
+  border-radius: 0;
+  padding: 11px 22px;
+  cursor: pointer;
+}
+.te-btn:hover { background: var(--te-orange-press); }
+.te-btn:active { transform: translateY(1px); }
+.te-btn--ghost {
+  background: transparent;
+  color: var(--g7);
+  border: 1px solid var(--g4);
+}
+.te-btn--ghost:hover { background: var(--g8); color: #fff; }
+
+/* ---- TE switch (styled checkbox) ----------------------------------------- */
+.te-switch {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 46px;
+  height: 24px;
+  background: var(--g2);
+  border: 1px solid var(--g4);
+  border-radius: 0;
+  position: relative;
+  cursor: pointer;
+  flex: none;
+}
+.te-switch::after {
+  content: "";
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  width: 20px;
+  height: 20px;
+  background: radial-gradient(circle at 40% 35%, #fff, #d6d6da 70%, #b5b5ba);
+  border: 1px solid var(--g4);
+  transition: left 0.12s steps(3);
+}
+.te-switch:checked { background: var(--te-orange); border-color: var(--te-orange-press); }
+.te-switch:checked::after { left: 23px; }
+
+/* ---- encoder knobs ------------------------------------------------------- */
+.te-knob {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 32%, #ffffff, #d3d3d8 62%, #a9a9af);
+  border: 2px solid var(--ring, var(--g4));
+  position: relative;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.28), inset 0 0 0 4px rgba(255, 255, 255, 0.35);
+  flex: none;
+}
+.te-knob::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 5px;
+  width: 2px;
+  height: 13px;
+  background: var(--g8);
+  transform: translateX(-50%) rotate(var(--rot, 0deg));
+  transform-origin: 50% 16px;
+}
+.te-knob.blue { --ring: var(--enc-blue); }
+.te-knob.green { --ring: var(--enc-green); }
+.te-knob.white { --ring: var(--enc-white); }
+.te-knob.orange { --ring: var(--enc-orange); }
+
+/* ---- LED ----------------------------------------------------------------- */
+.te-led {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--c, var(--enc-green));
+  box-shadow: 0 0 7px var(--c, var(--enc-green));
+  flex: none;
+}
+.te-led.red { --c: #ff3b30; }
+.te-led.green { --c: var(--enc-green); }
+.te-led.orange { --c: var(--te-orange); }
+.te-led.off { background: var(--g3); box-shadow: none; }
+
+/* ---- dot grid background ------------------------------------------------- */
+.te-dotgrid {
+  background-image: radial-gradient(var(--g3) 0.5px, transparent 0.6px);
+  background-size: 7px 7px;
+}
+
+/* ---- VU / bar meter ------------------------------------------------------ */
+.te-bar-track {
+  width: 100%;
+  background: var(--g7);
+  border: 1px solid var(--te-true-black);
+}
+.te-bar-fill { background: var(--te-orange); }
+
+/* ---- power-down arming overlay ------------------------------------------- */
+.arm-scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 11, 14, 0.74);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  padding: 16px;
+  animation: armFade 0.18s ease both;
+}
+@keyframes armFade { from { opacity: 0; } to { opacity: 1; } }
+.arm-panel {
+  width: 100%;
+  max-width: 380px;
+  padding: 22px;
+  animation: armPop 0.22s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@keyframes armPop { from { transform: translateY(10px) scale(0.98); opacity: 0; } to { transform: none; opacity: 1; } }
+.arm-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 14px; }
+.arm-head .te-model { font-size: 20px; }
+.arm-warn { padding: 14px 14px; margin-bottom: 16px; }
+.arm-warn-title { font-size: 18px; margin-bottom: 8px; }
+.arm-warn-body {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--screen-fg);
+}
+.arm-warn-body b { color: var(--te-orange); }
+.arm-label { display: block; margin-bottom: 12px; font-size: 10px; color: var(--g6); }
+.arm-switches { display: flex; flex-direction: column; gap: 11px; margin-bottom: 18px; }
+.arm-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  font-family: var(--font-grotesk);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--g8);
+  cursor: pointer;
+  user-select: none;
+}
+.arm-hold {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--g4);
+  background: #fbfbfc;
+  color: var(--g4);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 14px;
+  border-radius: 0;
+  cursor: not-allowed;
+  margin-bottom: 10px;
+  touch-action: none;
+}
+.arm-hold.ready { color: #c0392b; border-color: #c0392b; cursor: pointer; }
+.arm-hold-fill {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 0;
+  background: rgba(192, 57, 43, 0.22);
+  border-right: 2px solid #c0392b;
+}
+.arm-hold-txt { position: relative; }
+.arm-cancel { width: 100%; padding: 13px; font-size: 12px; }

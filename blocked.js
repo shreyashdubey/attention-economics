@@ -13,7 +13,7 @@ if (until) {
   const period = h >= 12 ? "PM" : "AM";
   const h12 = ((h + 11) % 12) + 1;
   const friendly = `${h12}:${String(m).padStart(2, "0")} ${period}`;
-  document.getElementById("until").textContent = `Available again at ${friendly}`;
+  document.getElementById("until").textContent = friendly;
 }
 
 document.getElementById("optionsLink").addEventListener("click", (e) => {
