@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blocked — Focus Guard</title>
+    <style>
+      :root {
+        color-scheme: dark;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+        background: radial-gradient(circle at 30% 20%, #1f2937, #0b0f17 70%);
+        color: #e5e7eb;
+      }
+      .card {
+        text-align: center;
+        padding: 48px 40px;
+        max-width: 460px;
+      }
+      .emoji {
+        font-size: 56px;
+        line-height: 1;
+      }
+      h1 {
+        font-size: 26px;
+        margin: 20px 0 8px;
+        font-weight: 650;
+      }
+      .site {
+        color: #f87171;
+        font-weight: 600;
+      }
+      p {
+        color: #9ca3af;
+        font-size: 15px;
+        line-height: 1.6;
+        margin: 6px 0;
+      }
+      .until {
+        margin-top: 24px;
+        display: inline-block;
+        padding: 10px 18px;
+        border-radius: 999px;
+        background: #111827;
+        border: 1px solid #1f2937;
+        color: #d1d5db;
+        font-size: 14px;
+      }
+      .options {
+        display: block;
+        margin-top: 28px;
+        color: #6b7280;
+        font-size: 13px;
+        text-decoration: none;
+      }
+      .options:hover {
+        color: #9ca3af;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="emoji">🧘</div>
+      <h1>Stay focused.</h1>
+      <p>
+        <span class="site" id="site">This site</span> is blocked right now.
+      </p>
+      <p>Get back to what matters — it'll still be here later.</p>
+      <div class="until" id="until"></div>
+      <a class="options" id="optionsLink" href="#">Adjust blocking schedule</a>
+    </div>
+    <script src="blocked.js"></script>
+  </body>
+</html>

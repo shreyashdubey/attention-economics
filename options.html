@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Focus Guard — Settings</title>
+    <style>
+      :root { color-scheme: light dark; }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background: #f6f7f9; color: #111827; padding: 40px 20px;
+      }
+      .wrap { max-width: 580px; margin: 0 auto; }
+      h1 { font-size: 22px; margin: 0 0 4px; }
+      .sub { color: #6b7280; font-size: 14px; margin: 0 0 28px; }
+      .card {
+        background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
+        padding: 22px; margin-bottom: 18px;
+      }
+      label { font-weight: 600; font-size: 14px; display: block; margin-bottom: 8px; }
+      input[type="time"], textarea {
+        padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 8px;
+        font-size: 14px; font-family: inherit; background: #fff; color: #111827;
+      }
+      textarea { width: 100%; min-height: 150px; resize: vertical; line-height: 1.6; }
+      .hint { color: #6b7280; font-size: 12px; margin-top: 8px; }
+      .toggle { display: flex; align-items: center; gap: 10px; }
+      .toggle input { width: 18px; height: 18px; }
+      .toggle label { margin: 0; }
+      .win-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+      .win-row .to { color: #6b7280; font-size: 13px; }
+      .win-row button {
+        background: transparent; color: #ef4444; border: 1px solid #fecaca;
+        padding: 6px 10px; border-radius: 8px; font-size: 12px; cursor: pointer;
+      }
+      .addwin {
+        background: #eef2ff; color: #4338ca; border: 1px solid #e0e7ff;
+        padding: 8px 14px; border-radius: 8px; font-size: 13px; cursor: pointer;
+      }
+      .inline { display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-end; }
+      .inline .field { flex: 1; min-width: 150px; }
+      button.primary {
+        background: #2563eb; color: #fff; border: none; padding: 12px 22px;
+        border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer;
+      }
+      button.primary:hover { background: #1d4ed8; }
+      .status { margin-left: 14px; color: #16a34a; font-size: 14px; opacity: 0; transition: opacity .2s; }
+      .status.show { opacity: 1; }
+      a.statslink { color: #2563eb; font-size: 14px; text-decoration: none; }
+      @media (prefers-color-scheme: dark) {
+        body { background: #0b0f17; color: #e5e7eb; }
+        .card { background: #111827; border-color: #1f2937; }
+        input[type="time"], textarea { background: #0b0f17; border-color: #1f2937; color: #e5e7eb; }
+        .sub, .hint, .win-row .to { color: #9ca3af; }
+        .addwin { background: #1e1b4b; color: #c7d2fe; border-color: #312e81; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Focus Guard</h1>
+      <p class="sub">Block distracting sites during the hours you choose · <a class="statslink" href="stats.html">View your progress →</a></p>
+
+      <div class="card">
+        <div class="toggle">
+          <input type="checkbox" id="enabled" />
+          <label for="enabled">Blocking enabled</label>
+        </div>
+      </div>
+
+      <div class="card">
+        <label>Block windows (your local time)</label>
+        <div id="windows"></div>
+        <button class="addwin" id="addWindow">+ Add a window</button>
+        <div class="hint">Sites are blocked during any window. Overnight windows (e.g. 23:00 → 06:00) are fine.</div>
+      </div>
+
+      <div class="card">
+        <label for="sites">Blocked sites</label>
+        <textarea id="sites" spellcheck="false"></textarea>
+        <div class="hint">One domain per line. Subdomains match automatically (<code>youtube.com</code> also covers <code>m.youtube.com</code>).</div>
+      </div>
+
+      <div class="card">
+        <div class="inline">
+          <div class="field">
+            <label for="summaryTime">Daily summary at</label>
+            <input type="time" id="summaryTime" />
+          </div>
+          <div class="field">
+            <label for="minutesPerBlockNum">Minutes saved per intercept (estimate)</label>
+            <input type="number" id="minutesPerBlockNum" min="1" max="120" style="padding:10px 12px;border:1px solid #d1d5db;border-radius:8px;width:100%;font-size:14px;" />
+          </div>
+        </div>
+        <div class="hint">Used only to estimate "time reclaimed" on your progress page.</div>
+      </div>
+
+      <button class="primary" id="save">Save</button>
+      <span class="status" id="status">Saved ✓</span>
+    </div>
+    <script src="options.js"></script>
+  </body>
+</html>
