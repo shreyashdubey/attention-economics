@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="te.css" />
     <title>blocked — FG-1</title>
     <style>
-      html, body { height: 100%; }
+      html, body { min-height: 100%; }
       body {
         background: #c9c9cd;
         display: flex;
@@ -27,140 +27,155 @@
       .unit-top .te-label { font-size: 11px; }
       .leds { display: flex; gap: 8px; align-items: center; }
 
-      /* zone header (matches console) */
       .zone { display: flex; align-items: center; gap: 12px; margin: 18px 0 18px; }
       .zone .te-label { font-size: 13px; letter-spacing: 0.2em; color: var(--g8); }
       .zone .line { flex: 1; height: 1px; background: var(--g3); }
       .zone .te-fig { font-size: 11px; }
 
-      /* verdict — dark type on aluminum */
+      /* ---- urge-surf gate: disrupt automaticity + ride the wave down ---- */
+      .surf {
+        border: 1px solid var(--g4);
+        background: #fbfbfc;
+        padding: 18px 16px 15px;
+        text-align: center;
+        margin-bottom: 22px;
+      }
+      .surf .orb {
+        width: 54px; height: 54px; margin: 2px auto 13px;
+        border-radius: 50%;
+        background: radial-gradient(circle at 50% 36%, #ff8a52, var(--te-orange) 58%, var(--te-orange-press));
+        box-shadow: 0 0 18px rgba(254, 80, 0, 0.4);
+        transform: scale(0.62);
+      }
+      .surf .phase {
+        font-family: var(--font-mono);
+        font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase;
+        color: var(--g7); font-weight: 700; min-height: 15px;
+      }
+      .surf .sub {
+        font-family: var(--font-grotesk);
+        font-size: 13px; color: var(--g6); line-height: 1.55; margin-top: 9px;
+      }
+      .surf .sub .count { color: var(--te-orange); font-weight: 700; }
+
+      /* verdict */
       .headline {
         font-family: var(--font-pixel);
-        font-size: 44px;
-        letter-spacing: 0.01em;
-        color: var(--g8);
-        line-height: 1;
-        margin: 2px 0 14px;
+        font-size: 44px; letter-spacing: 0.01em; color: var(--g8);
+        line-height: 1; margin: 2px 0 14px;
       }
-      .site-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
+      .site-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
       .site-row .site {
-        font-family: var(--font-mono);
-        font-weight: 700;
-        font-size: 18px;
-        text-transform: lowercase;
-        color: var(--te-orange);
-        word-break: break-all;
+        font-family: var(--font-mono); font-weight: 700; font-size: 18px;
+        text-transform: lowercase; color: var(--te-orange); word-break: break-all;
       }
       .site-row .tag {
-        font-family: var(--font-mono);
-        font-size: 9px;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        color: var(--te-orange);
-        border: 1px solid var(--te-orange);
-        padding: 3px 6px;
+        font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.12em;
+        text-transform: uppercase; color: var(--te-orange);
+        border: 1px solid var(--te-orange); padding: 3px 6px;
       }
 
-      /* the price — one contained OLED readout does the talking */
+      /* contextual line (anti-habituation) */
+      .context {
+        font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.04em;
+        color: var(--g6); line-height: 1.6; margin-bottom: 24px;
+      }
+      .context b { color: var(--te-orange); }
+
+      /* the price — contained OLED readout */
       .price { margin-bottom: 26px; }
       .price .lead {
-        font-family: var(--font-mono);
-        font-size: 12px;
-        letter-spacing: 0.04em;
-        color: var(--g6);
-        margin-bottom: 12px;
-        line-height: 1.6;
+        font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.04em;
+        color: var(--g6); margin-bottom: 12px; line-height: 1.6;
       }
       .price .lead #now { color: var(--g8); font-weight: 700; }
       .price-screen { padding: 0; }
       .price-body { padding: 22px 18px; text-align: center; }
       .price-body .hero {
-        font-family: var(--font-pixel);
-        font-size: 60px;
-        line-height: 0.96;
-        color: var(--te-orange);
-        text-shadow: 0 0 22px rgba(254, 80, 0, 0.4);
+        font-family: var(--font-pixel); font-size: 60px; line-height: 0.96;
+        color: var(--te-orange); text-shadow: 0 0 22px rgba(254, 80, 0, 0.4);
       }
       .price-body .hero .u { font-size: 21px; color: var(--screen-fg); margin-left: 6px; }
       .price .foot {
-        font-family: var(--font-mono);
-        font-size: 13px;
-        color: var(--g7);
-        line-height: 1.7;
-        margin-top: 12px;
+        font-family: var(--font-mono); font-size: 13px; color: var(--g7);
+        line-height: 1.7; margin-top: 12px;
       }
 
-      /* rotating line — dry, dark on aluminum */
+      /* anchor (fixed, repeated every block) + rotating line */
+      .anchor {
+        font-family: var(--font-grotesk); font-size: 15px; font-weight: 700;
+        color: var(--g7); line-height: 1.5; margin-bottom: 8px;
+      }
       .creed {
-        font-family: var(--font-grotesk);
-        font-size: 19px;
-        font-weight: 700;
-        line-height: 1.45;
-        color: var(--g8);
-        margin: 0 0 26px;
-        min-height: 50px;
+        font-family: var(--font-grotesk); font-size: 19px; font-weight: 700;
+        line-height: 1.45; color: var(--g8); margin: 0 0 26px; min-height: 50px;
       }
 
-      /* track record — mini OLED readouts (matches console) */
-      .record { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 24px; }
+      /* banked record + loss framing */
+      .banked-lbl { font-size: 10px; letter-spacing: 0.16em; color: var(--g6); margin-bottom: 10px; }
+      .record { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 12px; }
       .record .ro { padding: 18px 10px; text-align: center; }
       .record .ro .n {
-        font-family: var(--font-pixel);
-        font-size: 30px;
-        color: var(--screen-green);
-        line-height: 1;
-        margin-bottom: 10px;
+        font-family: var(--font-pixel); font-size: 30px; color: var(--screen-green);
+        line-height: 1; margin-bottom: 10px;
       }
       .record .ro.accent .n { color: var(--te-orange); }
       .record .ro .l {
-        font-family: var(--font-mono);
-        font-size: 9px;
-        letter-spacing: 0.13em;
-        text-transform: uppercase;
-        color: var(--screen-dim);
+        font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.13em;
+        text-transform: uppercase; color: var(--screen-dim);
       }
+      .banked-note {
+        font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.03em;
+        color: var(--g6); line-height: 1.6; margin-bottom: 22px;
+      }
+      .banked-note b { color: var(--te-orange); }
 
       .back {
-        font-family: var(--font-mono);
-        font-size: 13px;
-        letter-spacing: 0.02em;
-        color: var(--g6);
-        line-height: 1.7;
+        font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.02em;
+        color: var(--g6); line-height: 1.7;
       }
       .back #until { color: var(--te-orange); font-weight: 700; }
 
       .unit-bottom {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-top: 22px;
+        display: flex; align-items: center; justify-content: space-between;
+        gap: 12px; margin-top: 22px;
       }
       .unit-bottom .te-fig { font-size: 10px; }
+      .exit { display: flex; align-items: center; gap: 10px; }
+      .exit .lockmsg {
+        font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.1em;
+        text-transform: uppercase; color: var(--g5);
+      }
       #optionsLink {
-        font-family: var(--font-mono);
-        font-size: 12px;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        color: var(--g6);
-        text-decoration: none;
+        font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.1em;
+        text-transform: uppercase; color: var(--g6); text-decoration: none;
         border-bottom: 1px solid var(--g4);
       }
       #optionsLink:hover { color: var(--te-orange); border-color: var(--te-orange); }
+      #optionsLink.locked { opacity: 0.35; pointer-events: none; }
 
-      /* ---- boot-up motion ---- */
       @media (prefers-reduced-motion: no-preference) {
         @keyframes boot { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
         @keyframes screenOn { 0% { opacity: 0; } 7% { opacity: 0.55; } 11% { opacity: 0.15; } 22% { opacity: 1; } 100% { opacity: 1; } }
+        /* guided breathing: inhale 4s · hold 1s · exhale 5s */
+        @keyframes breathe {
+          0% { transform: scale(0.62); }
+          40% { transform: scale(1.16); }
+          50% { transform: scale(1.16); }
+          100% { transform: scale(0.62); }
+        }
+        .surf .orb { animation: breathe 10s ease-in-out infinite; }
         .unit-top, .haz-top { animation: boot 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
         .zone     { animation: boot 0.45s ease both 0.08s; }
-        .headline { animation: boot 0.45s ease both 0.16s; }
-        .site-row { animation: boot 0.45s ease both 0.24s; }
-        .price-screen { animation: screenOn 0.7s steps(1, end) both 0.32s; }
-        .price .lead, .price .foot { animation: boot 0.45s ease both 0.34s; }
-        .creed    { animation: boot 0.45s ease both 0.46s; }
-        .record   { animation: boot 0.45s ease both 0.54s; }
-        .back     { animation: boot 0.45s ease both 0.62s; }
-        .unit-bottom { animation: boot 0.45s ease both 0.7s; }
+        .surf     { animation: boot 0.45s ease both 0.16s; }
+        .headline { animation: boot 0.45s ease both 0.26s; }
+        .site-row, .context { animation: boot 0.45s ease both 0.34s; }
+        .price-screen { animation: screenOn 0.7s steps(1, end) both 0.42s; }
+        .price .lead, .price .foot, .anchor { animation: boot 0.45s ease both 0.44s; }
+        .creed    { animation: boot 0.45s ease both 0.54s; }
+        .record, .banked-note { animation: boot 0.45s ease both 0.62s; }
+        .back     { animation: boot 0.45s ease both 0.7s; }
+        .unit-bottom { animation: boot 0.45s ease both 0.78s; }
       }
     </style>
   </head>
@@ -189,14 +204,25 @@
         <span class="te-fig">fig.02 &mdash; held</span>
       </div>
 
+      <!-- urge-surf gate: the pause comes first, on purpose -->
+      <div class="surf">
+        <div class="orb"></div>
+        <div class="phase" id="phase">breathe in</div>
+        <div class="sub" id="surfSub">
+          the urge crests and fades like a wave. sit with it &mdash;
+          <span class="count" id="count">12</span>s.
+        </div>
+      </div>
+
       <div class="headline">NOT WORTH IT</div>
       <div class="site-row">
         <span class="site" id="site">this site</span>
         <span class="tag">time-sink</span>
       </div>
+      <div class="context" id="context">&mdash;</div>
 
       <div class="price">
-        <div class="lead">one visit &asymp; <span id="now">~12 min</span>. as a daily habit, that&rsquo;s:</div>
+        <div class="lead">one visit &asymp; <span id="now">12 min</span>. as a daily habit, that&rsquo;s:</div>
         <div class="te-screen price-screen">
           <span class="te-hazard te-hazard--edge te-hazard--live"></span>
           <div class="price-body">
@@ -206,13 +232,16 @@
         <div class="foot" id="priceFoot">&mdash;</div>
       </div>
 
+      <div class="anchor">The urge always passes. Acting on it is a choice.</div>
       <p class="creed" id="creed">&mdash;</p>
 
+      <div class="banked-lbl te-label">banked &mdash; yours</div>
       <div class="record">
         <div class="te-screen ro accent"><div class="n" id="siteCount">0&times;</div><div class="l">refused here</div></div>
         <div class="te-screen ro"><div class="n" id="streak">0</div><div class="l">day streak</div></div>
         <div class="te-screen ro"><div class="n" id="reclaimed">0m</div><div class="l">reclaimed</div></div>
       </div>
+      <div class="banked-note" id="bankedNote">&mdash;</div>
 
       <p class="back">
         it&rsquo;ll keep until <span id="until">&mdash;&mdash;:&mdash;&mdash;</span>. go do one hard thing first.
@@ -220,7 +249,10 @@
 
       <div class="unit-bottom">
         <span class="te-fig">FG&ndash;1 &middot; engineered focus</span>
-        <a href="#" id="optionsLink">adjust schedule</a>
+        <span class="exit">
+          <span class="lockmsg" id="lockmsg">unlocks in 12s</span>
+          <a href="#" id="optionsLink" class="locked">adjust schedule</a>
+        </span>
       </div>
     </div>
     <script src="blocked.js"></script>
