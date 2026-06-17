@@ -115,6 +115,29 @@
       .foot { display: flex; justify-content: space-between; margin-top: 28px; }
       .foot .te-fig { font-size: 10px; }
 
+      /* ---- intel / adaptive panel ---- */
+      .intel-mod { padding: 4px 0 8px; }
+      .auto-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+      .auto-row .t { font-family: var(--font-grotesk); font-size: 16px; font-weight: 700; }
+      .auto-row .te-label { display: block; margin-top: 3px; font-size: 10px; color: var(--g5); }
+      .thresh-row { margin-bottom: 18px; }
+      .thresh-row input { width: 120px; }
+      .pat-head { font-size: 10px; letter-spacing: 0.14em; color: var(--g6); margin-bottom: 6px; }
+      .pat-row { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-top: 1px solid var(--g2); }
+      .pat-row .dom { font-family: var(--font-mono); font-size: 14px; color: var(--g8); width: 150px; word-break: break-all; }
+      .pat-row .meter { flex: 1; height: 10px; background: var(--g2); position: relative; min-width: 40px; }
+      .pat-row .meter i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--te-orange); }
+      .pat-row .hrs { font-family: var(--font-mono); font-size: 12px; color: var(--g6); width: 46px; text-align: right; }
+      .pat-tag.sink { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--te-orange); border: 1px solid var(--te-orange); padding: 2px 5px; }
+      .pat-row .acts { display: flex; gap: 6px; }
+      .pat-row .pblock, .pat-row .pdismiss {
+        font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+        border: 1px solid var(--g4); background: transparent; padding: 7px 10px; cursor: pointer; color: var(--g7); border-radius: 0;
+      }
+      .pat-row .pblock:hover { background: var(--te-orange); color: #fff; border-color: var(--te-orange-press); }
+      .pat-row .pdismiss:hover { background: var(--g7); color: #fff; }
+      .pat-empty { font-family: var(--font-grotesk); color: var(--g6); font-size: 14px; line-height: 1.75; padding: 6px 0; }
+
       /* ---- boot-up motion ---- */
       @media (prefers-reduced-motion: no-preference) {
         @keyframes boot { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
@@ -170,6 +193,28 @@
           <span class="te-fig screen-dim">fig.b</span>
         </div>
         <div class="chart" id="chart"></div>
+      </div>
+
+      <!-- ===== INTEL / ADAPTIVE ===== -->
+      <div class="zone">
+        <span class="te-label">intel</span>
+        <span class="line"></span>
+        <span class="te-fig">fig.b2 &mdash; learns your patterns</span>
+      </div>
+
+      <div class="intel-mod">
+        <div class="auto-row">
+          <div>
+            <span class="t">auto-block new time-sinks</span>
+            <span class="te-label">off = suggest &amp; let you approve · on = block automatically</span>
+          </div>
+          <input type="checkbox" id="autoBlock" class="te-switch" />
+        </div>
+        <div class="thresh-row">
+          <label class="field-l" for="suggestThreshold">becomes a "time-sink" at &mdash; active min / week</label>
+          <input type="number" id="suggestThreshold" min="10" max="600" step="5" />
+        </div>
+        <div id="patterns"></div>
       </div>
 
       <!-- ===== CONTROLS / SETTINGS ===== -->
@@ -237,5 +282,6 @@
     <script src="arming.js"></script>
     <script src="options.js"></script>
     <script src="stats.js"></script>
+    <script src="patterns.js"></script>
   </body>
 </html>

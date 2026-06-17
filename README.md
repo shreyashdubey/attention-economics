@@ -23,6 +23,13 @@ you choose, counts the urges it intercepts, and shows your daily progress.
 - **Power-down sequence** — turning blocking OFF is deliberately hard: flip three
   safety switches, then hold a button for 3 seconds. Turning it back ON is instant.
   (This is the friction that stops a weak-moment one-click disable.)
+- **Adaptive learning (INTEL panel)** — the extension measures *active* foreground
+  time per site (idle-aware, local only). When a site you don't block starts eating
+  your week, it surfaces it under INTEL with one-click **Block / Dismiss**, and fires
+  a suggestion notification. Flip **auto-block** on to add new time-sinks
+  automatically. A built-in productivity allowlist (github, gmail, docs, etc.) is
+  never suggested. So the block list keeps up when you migrate from one distraction
+  to the next.
 
 The whole UI is styled after Teenage Engineering (OP‑1 / OP‑XY): brushed-aluminum
 faceplates, International Orange `#fe5000`, encoder knobs, OLED display screens,
@@ -46,20 +53,24 @@ Incognito**. (See the chat for the catch about a determined workaround.)
 
 ## Privacy
 
-All data — your settings and intercept counts — lives in Chrome's local/sync
-storage on your machine. Nothing is sent anywhere.
+All data — settings, intercept counts, and the per-site active-time the adaptive
+learning uses — lives in Chrome's local/sync storage on your machine. **Nothing is
+ever sent anywhere.** The `idle` permission is only used to avoid counting time when
+you're away from the keyboard.
 
 ## Files
 
-| File              | Purpose                                      |
-| ----------------- | -------------------------------------------- |
-| `manifest.json`   | Extension manifest                           |
-| `background.js`   | Service worker — blocking + stats + summary  |
-| `blocked.html/js` | The page shown when a site is blocked        |
-| `options.html`    | The single console (monitor + controls)      |
-| `options.js`      | Settings logic (windows, sites, summary)     |
-| `stats.js`        | Monitor logic (counts, streak, chart)        |
-| `popup.html/js`   | Toolbar popup                                |
-| `te.css`          | Teenage Engineering design system            |
-| `fonts/`          | Space Mono + Silkscreen (bundled, OFL)       |
-| `icons/`          | Extension icons                              |
+| File              | Purpose                                          |
+| ----------------- | ------------------------------------------------ |
+| `manifest.json`   | Extension manifest                               |
+| `background.js`   | Service worker — blocking, stats, usage tracking |
+| `blocked.html/js` | The page shown when a site is blocked            |
+| `options.html`    | The single console (monitor + intel + controls)  |
+| `options.js`      | Settings logic (windows, sites, summary)         |
+| `stats.js`        | Monitor logic (counts, streak, chart)            |
+| `patterns.js`     | INTEL panel — adaptive suggestions               |
+| `arming.js`       | Power-down confirmation sequence                 |
+| `popup.html/js`   | Toolbar popup                                    |
+| `te.css`          | Teenage Engineering design system                |
+| `fonts/`          | Space Mono + Silkscreen (bundled, OFL)           |
+| `icons/`          | Extension icons                                  |

@@ -61,6 +61,15 @@
   --font-grotesk: "Helvetica Neue", Helvetica, Arial, "Univers", sans-serif;
   --font-mono: "Space Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
   --font-pixel: "Silkscreen", "Space Mono", monospace;
+
+  /* hazard / caution tape — one definition, reused everywhere */
+  --hazard-stripes: repeating-linear-gradient(
+    -45deg,
+    var(--te-true-black) 0,
+    var(--te-true-black) 13px,
+    var(--te-orange) 13px,
+    var(--te-orange) 26px
+  );
 }
 
 * { box-sizing: border-box; }
@@ -271,6 +280,19 @@ body {
 }
 .te-bar-fill { background: var(--te-orange); }
 
+/* ---- hazard / caution striping ------------------------------------------- */
+/* Diagonal black + International-Orange caution tape. Used as an ACCENT on
+   genuine warning surfaces only (block screen, power-down arming) — never as
+   a background fill, or it drowns the one-accent TE restraint. */
+.te-hazard { background-image: var(--hazard-stripes); }
+.te-hazard--strip { width: 100%; height: 12px; display: block; }
+.te-hazard--edge { width: 100%; height: 6px; display: block; }
+@media (prefers-reduced-motion: no-preference) {
+  /* slow industrial crawl; 36.77px = 26px band * √2 = one seamless cycle */
+  .te-hazard--live { animation: hazardRoll 3.2s linear infinite; }
+  @keyframes hazardRoll { to { background-position: 36.77px 0; } }
+}
+
 /* ---- power-down arming overlay ------------------------------------------- */
 .arm-scrim {
   position: fixed;
@@ -293,7 +315,18 @@ body {
 @keyframes armPop { from { transform: translateY(10px) scale(0.98); opacity: 0; } to { transform: none; opacity: 1; } }
 .arm-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 14px; }
 .arm-head .te-model { font-size: 20px; }
-.arm-warn { padding: 14px 14px; margin-bottom: 16px; }
+.arm-warn { padding: 22px 14px 14px; margin-bottom: 16px; }
+/* full-bleed caution band across the top of the disarm warning */
+.arm-warn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background-image: var(--hazard-stripes);
+  z-index: 1;
+}
 .arm-warn-title { font-size: 18px; margin-bottom: 8px; }
 .arm-warn-body {
   font-family: var(--font-mono);

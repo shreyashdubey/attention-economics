@@ -3,7 +3,7 @@
   "name": "Focus Guard — Time-Based Site Blocker",
   "version": "1.1.0",
   "description": "Blocks distracting sites during the hours you choose, tracks urges intercepted, and shows your daily focus progress.",
-  "permissions": ["storage", "tabs", "webNavigation", "alarms", "notifications"],
+  "permissions": ["storage", "tabs", "webNavigation", "alarms", "notifications", "idle"],
   "host_permissions": ["<all_urls>"],
   "background": {
     "service_worker": "background.js"
