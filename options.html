@@ -138,6 +138,18 @@
       .pat-row .pdismiss:hover { background: var(--g7); color: #fff; }
       .pat-empty { font-family: var(--font-grotesk); color: var(--g6); font-size: 14px; line-height: 1.75; padding: 6px 0; }
 
+      /* ---- emergency / break-glass overview ---- */
+      .em-intro { font-family: var(--font-grotesk); color: var(--g6); font-size: 14px; line-height: 1.75; margin-bottom: 14px; }
+      .em-intro b { color: var(--g8); }
+      .em-tier {
+        font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+        border: 1px solid var(--g4); color: var(--g6); padding: 3px 6px; width: 76px; text-align: center;
+      }
+      .em-tier.em-severe { color: var(--te-orange); border-color: var(--te-orange); }
+      .em-tier.em-moderate { color: var(--g7); border-color: var(--g5); }
+      .em-state { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--g5); width: 50px; text-align: right; }
+      .em-state.spent { color: var(--te-orange); }
+
       /* ---- boot-up motion ---- */
       @media (prefers-reduced-motion: no-preference) {
         @keyframes boot { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
@@ -217,6 +229,22 @@
         <div id="patterns"></div>
       </div>
 
+      <!-- ===== EMERGENCY / BREAK-GLASS ===== -->
+      <div class="zone">
+        <span class="te-label">emergency</span>
+        <span class="line"></span>
+        <span class="te-fig">fig.b3 &mdash; break-glass budgets</span>
+      </div>
+
+      <div class="intel-mod">
+        <p class="em-intro">
+          When you genuinely need a blocked site, you can <b>break the glass</b> on its block screen for a metered pass &mdash;
+          <b>one per site per day</b>. The budget shrinks the more the guard sees you reach for a site:
+          <b>severe&nbsp;10m</b> &middot; <b>moderate&nbsp;30m</b> &middot; <b>mild&nbsp;60m</b>. Severity is learned automatically.
+        </p>
+        <div id="emergencyList"></div>
+      </div>
+
       <!-- ===== CONTROLS / SETTINGS ===== -->
       <div class="zone">
         <span class="te-label">controls</span>
@@ -264,18 +292,6 @@
         <div class="hint">Used only to estimate "time reclaimed" on the monitor above.</div>
       </div>
 
-      <div class="module">
-        <div class="module-head"><span class="te-label">05 / breath-lock</span><span class="te-fig">mic &middot; offline</span></div>
-        <div class="enable-row">
-          <div>
-            <span class="t">breath-lock the pause</span>
-            <span class="te-label">block screen waits for one real breath &middot; mic never leaves this device</span>
-          </div>
-          <input type="checkbox" id="breathLock" class="te-switch" />
-        </div>
-        <div class="hint">Used only on the block screen, processed locally &mdash; no recording, nothing sent anywhere; the track stops the instant the breath completes. Keep your mic close and exhale toward it. Falls back to a timed pause if the mic is unavailable.</div>
-      </div>
-
       <div class="save-row">
         <button class="te-btn" id="save">save settings</button>
         <span class="status" id="status">&#10003; saved &mdash; reload monitor to refresh</span>
@@ -295,5 +311,6 @@
     <script src="options.js"></script>
     <script src="stats.js"></script>
     <script src="patterns.js"></script>
+    <script src="emergency-panel.js"></script>
   </body>
 </html>

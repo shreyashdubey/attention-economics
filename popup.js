@@ -50,6 +50,22 @@ async function render() {
   document.getElementById("today").innerHTML = `Today: <b>${c}</b> urge${
     c === 1 ? "" : "s"
   } intercepted.`;
+
+  // Live break-glass pass, if any — show the soonest-expiring one's countdown.
+  const { emergencyPasses = {} } = await chrome.storage.local.get("emergencyPasses");
+  const now = Date.now();
+  const active = Object.entries(emergencyPasses)
+    .filter(([, p]) => now < p.expiresAt)
+    .sort((a, b) => a[1].expiresAt - b[1].expiresAt);
+  const emEl = document.getElementById("emergency");
+  if (active.length) {
+    const [emSite, p] = active[0];
+    const min = Math.max(1, Math.ceil((p.expiresAt - now) / 60000));
+    emEl.innerHTML = `<span class="badge">break-glass</span> ${emSite} &middot; ${min} min left`;
+    emEl.style.display = "";
+  } else {
+    emEl.style.display = "none";
+  }
 }
 
 document.getElementById("enabled").addEventListener("change", async (e) => {

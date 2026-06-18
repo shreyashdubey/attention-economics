@@ -46,6 +46,16 @@
         color: var(--screen-green);
         letter-spacing: 0;
       }
+      .screen .emrow {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.05em;
+        color: var(--screen-fg);
+        margin-top: 10px;
+        border-top: 1px solid #20222a;
+        padding-top: 9px;
+      }
+      .screen .emrow .badge { font-weight: 700; color: var(--te-orange); }
 
       .knobs {
         display: flex;
@@ -97,6 +107,7 @@
       <div class="te-screen screen">
         <div class="stat-line" id="state">loading&hellip;</div>
         <div class="today" id="today"></div>
+        <div class="emrow" id="emergency" style="display:none"></div>
       </div>
 
       <div class="knobs">

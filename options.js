@@ -6,7 +6,6 @@ const DEFAULTS = {
   ],
   summaryTime: "21:00",
   minutesPerBlock: 12,
-  breathLock: false,
   sites: [
     "youtube.com",
     "netflix.com",
@@ -79,7 +78,6 @@ async function load() {
   renderWindows(s.windows);
   $("summaryTime").value = s.summaryTime;
   $("minutesPerBlockNum").value = s.minutesPerBlock;
-  $("breathLock").checked = s.breathLock;
   $("sites").value = s.sites.join("\n");
 }
 
@@ -107,24 +105,6 @@ $("enabled").addEventListener("change", async (e) => {
     }
   }
   await chrome.storage.sync.set({ enabled: e.target.checked });
-});
-
-// Breath-lock writes immediately. Turning it ON requests mic permission here,
-// in a calm moment, so the block screen never surprises you with a prompt.
-$("breathLock").addEventListener("change", async (e) => {
-  if (e.target.checked) {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      stream.getTracks().forEach((t) => t.stop()); // we only wanted the grant
-    } catch (err) {
-      e.target.checked = false; // denied / no mic — can't enable
-      alert(
-        "Microphone access is needed for breath-lock. It's processed on-device only — nothing is recorded or sent."
-      );
-      return;
-    }
-  }
-  await chrome.storage.sync.set({ breathLock: e.target.checked });
 });
 
 $("addWindow").addEventListener("click", () => {

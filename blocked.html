@@ -32,96 +32,39 @@
       .zone .line { flex: 1; height: 1px; background: var(--g3); }
       .zone .te-fig { font-size: 11px; }
 
-      /* ---- urge-surf gate: disrupt automaticity + ride the wave down ---- */
-      .surf {
+      /* ---- mandatory pause: clean light panel, prominent countdown ---- */
+      .pause {
         border: 1px solid var(--g4);
         background: #fbfbfc;
-        padding: 18px 16px 15px;
+        padding: 20px 18px 18px;
         text-align: center;
-        margin-bottom: 22px;
+        margin-bottom: 16px;
       }
-      /* ---- breathing gauge: flat, hard-edged, TE-native ---- */
-      .surf .orb {
-        position: relative;
-        width: 84px; height: 84px;
-        margin: 6px auto 18px;
-        border: 2px solid var(--g4);
-        border-radius: 50%;
-        background: #fbfbfc;
-        display: grid; place-items: center;
-        transition: border-color 0.18s ease;
+      .pause-lbl {
+        font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em;
+        text-transform: uppercase; color: var(--g6); margin-bottom: 10px;
       }
-      /* faint inner guide ring (the "target") */
-      .surf .orb::before {
-        content: ""; position: absolute; inset: 12px;
-        border: 1px solid var(--g3); border-radius: 50%;
+      .pause-num {
+        font-family: var(--font-pixel); font-size: 60px; line-height: 0.9;
+        color: var(--te-orange);
       }
-      /* the breathing fill — scales with the breath / live mic energy */
-      .orb-fill {
-        width: 54px; height: 54px; border-radius: 50%;
+      .pause-num.done { color: var(--enc-green); }
+      .pause-unit {
+        font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em;
+        text-transform: uppercase; color: var(--g5); margin-top: 6px;
+      }
+      .pause-track {
+        height: 4px; margin: 16px auto 2px; max-width: 320px;
+        background: var(--g3);
+      }
+      .pause-fill {
+        display: block; height: 100%; width: 0%;
         background: var(--te-orange);
-        transform: scale(0.42);
-        transform-origin: center;
-        will-change: transform;
-        transition: background 0.18s ease;
+        transition: width 0.2s linear;
       }
-      .surf .phase {
-        font-family: var(--font-mono);
-        font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase;
-        color: var(--g7); font-weight: 700; min-height: 15px;
-      }
-      .surf .sub {
-        font-family: var(--font-grotesk);
-        font-size: 13px; color: var(--g6); line-height: 1.55; margin-top: 9px;
-      }
-      .surf .sub .count { color: var(--te-orange); font-weight: 700; }
-      .surf-start { display: inline-block; margin: 12px auto 4px; font-size: 13px; padding: 13px 26px; }
-      .diag {
-        font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.03em;
-        color: var(--g6); margin-top: 12px; word-break: break-all;
-        border-top: 1px solid var(--g3); padding-top: 8px;
-      }
-      /* live dB meter (breath mode only) */
-      .surf.breath .orb { cursor: pointer; }
-      /* the gauge bezel lights up when the mic actually hears you */
-      .orb.hit { border-color: var(--te-orange); }
-      .meter { max-width: 300px; margin: 13px auto 2px; }
-      .meter-track {
-        height: 8px; background: var(--g2); border: 1px solid var(--g4);
-        position: relative; overflow: hidden;
-      }
-      .meter-fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0%; background: var(--te-orange); }
-      .meter-read {
-        font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em;
-        text-transform: uppercase; color: var(--g6); margin-top: 6px;
-      }
-      .meter-read #db { color: var(--g8); font-weight: 700; }
-      /* live session: JS drives the fill from breath energy, so stop the idle pulse */
-      .surf.live .orb-fill { animation: none; }
-      /* three count-up timers — light up in sequence as the tutor detects each phase */
-      .timers { display: flex; gap: 8px; justify-content: center; margin: 13px auto 0; max-width: 340px; }
-      .tchip {
-        flex: 1; border: 1px solid var(--g4); background: #fbfbfc; padding: 8px 6px;
-        opacity: 0.42; transition: opacity 0.2s ease, border-color 0.2s ease, background 0.2s ease;
-      }
-      .tchip .tl {
-        display: block; font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.12em;
-        text-transform: uppercase; color: var(--g6); margin-bottom: 4px;
-      }
-      .tchip .tv { font-family: var(--font-pixel); font-size: 18px; color: var(--g8); }
-      .tchip.active { opacity: 1; border-color: var(--te-orange); background: #fff5ef; }
-      .tchip.active .tv { color: var(--te-orange); }
-      .tchip.done { opacity: 1; }
-      /* session score */
-      .score { text-align: center; margin-top: 14px; }
-      .score-n {
-        font-family: var(--font-pixel); font-size: 42px; color: var(--te-orange);
-        line-height: 1; text-shadow: 0 0 18px rgba(254, 80, 0, 0.35);
-      }
-      .score-n .score-d { font-size: 16px; color: var(--g6); margin-left: 4px; }
-      .score-v {
-        font-family: var(--font-grotesk); font-size: 14px; font-weight: 700;
-        color: var(--g7); margin-top: 8px; line-height: 1.4;
+      .pause-sub {
+        font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.03em;
+        color: var(--g6); line-height: 1.55; margin-top: 14px;
       }
 
       /* verdict */
@@ -220,22 +163,61 @@
       #optionsLink:hover { color: var(--te-orange); border-color: var(--te-orange); }
       #optionsLink.locked { opacity: 0.35; pointer-events: none; }
 
+      /* ---- emergency access: metered break-glass, scaled to severity ---- */
+      .breakglass {
+        position: relative; overflow: hidden;
+        border: 1px solid var(--g4); background: #fbfbfc;
+        margin: 24px 0 4px;
+        transition: opacity 0.2s ease;
+      }
+      .breakglass.locked { opacity: 0.5; }
+      .breakglass .bg-body { padding: 15px 16px 16px; }
+      .bg-row { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 9px; }
+      .bg-lbl { font-size: 10px; }
+      .bg-tier {
+        font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.12em;
+        text-transform: uppercase; color: var(--te-orange);
+        border: 1px solid var(--te-orange); padding: 3px 6px; white-space: nowrap;
+      }
+      .bg-desc {
+        font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.03em;
+        color: var(--g6); line-height: 1.6; margin-bottom: 14px;
+      }
+      .bg-desc b { color: var(--g8); }
+      .bg-btn {
+        width: 100%;
+        font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.12em;
+        font-size: 12px; font-weight: 700;
+        background: transparent; color: var(--g5);
+        border: 1px solid var(--g4); border-radius: 0;
+        padding: 13px; cursor: not-allowed; transition: color 0.15s, border-color 0.15s;
+      }
+      .breakglass:not(.locked) .bg-btn:not(:disabled) { color: #c0392b; border-color: #c0392b; cursor: pointer; }
+      .breakglass:not(.locked) .bg-btn:not(:disabled):hover { background: #c0392b; color: #fff; }
+      .bg-foot {
+        font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.1em;
+        text-transform: uppercase; color: var(--g5); text-align: center; margin-top: 10px;
+      }
+
+      /* break-glass confirm dialog (reuses the global .arm-* overlay styles) */
+      .bg-reason-l { display: block; margin-bottom: 9px; font-size: 10px; color: var(--g6); }
+      .bg-reason {
+        width: 100%; resize: none;
+        font-family: var(--font-mono); font-size: 13px; line-height: 1.5;
+        background: #fbfbfc; color: var(--g8);
+        border: 1px solid var(--g4); border-radius: 0;
+        padding: 10px 12px; margin-bottom: 16px;
+      }
+      .bg-reason:focus { outline: 2px solid var(--te-orange); outline-offset: -1px; }
+
       @media (prefers-reduced-motion: no-preference) {
         @keyframes boot { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
         @keyframes screenOn { 0% { opacity: 0; } 7% { opacity: 0.55; } 11% { opacity: 0.15; } 22% { opacity: 1; } 100% { opacity: 1; } }
-        /* guided breathing: inhale 4s · hold 1s · exhale 5s */
-        /* idle breathing: the orange fill swells and shrinks (inhale 4s · hold 1s · exhale 5s) */
-        @keyframes breathe {
-          0% { transform: scale(0.42); }
-          40% { transform: scale(1); }
-          50% { transform: scale(1); }
-          100% { transform: scale(0.42); }
-        }
-        .orb-fill { animation: breathe 10s ease-in-out infinite; }
         .unit-top, .haz-top { animation: boot 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
-        .zone     { animation: boot 0.45s ease both 0.08s; }
-        .surf     { animation: boot 0.45s ease both 0.16s; }
-        .headline { animation: boot 0.45s ease both 0.26s; }
+        .pause      { animation: boot 0.45s ease both 0.1s; }
+        .breakglass { animation: boot 0.45s ease both 0.2s; }
+        .zone     { animation: boot 0.45s ease both 0.28s; }
+        .headline { animation: boot 0.45s ease both 0.32s; }
         .site-row, .context { animation: boot 0.45s ease both 0.34s; }
         .price-screen { animation: screenOn 0.7s steps(1, end) both 0.42s; }
         .price .lead, .price .foot, .anchor { animation: boot 0.45s ease both 0.44s; }
@@ -265,37 +247,36 @@
 
       <span class="te-hazard te-hazard--strip te-hazard--live haz-top"></span>
 
+      <!-- mandatory pause: a hard countdown, up top and unmissable. it gates
+           both the escape hatch and the break-glass below. -->
+      <div class="pause" id="pause">
+        <div class="pause-lbl" id="pauseLbl">mandatory pause</div>
+        <div class="pause-num" id="count">12</div>
+        <div class="pause-unit" id="pauseUnit">seconds</div>
+        <div class="pause-track"><i class="pause-fill" id="pauseFill"></i></div>
+        <div class="pause-sub" id="pauseSub">sit with the urge. it crests and fades &mdash; then you decide.</div>
+      </div>
+
+      <!-- emergency access: a metered pass, scaled to how hard this site hits
+           you. stays locked until the pause above completes. -->
+      <div class="breakglass locked" id="breakglass">
+        <div class="bg-body">
+          <div class="bg-row">
+            <span class="bg-lbl te-label">emergency access</span>
+            <span class="bg-tier" id="bgTier">&mdash;</span>
+          </div>
+          <div class="bg-desc" id="bgDesc">
+            if you genuinely need it, break the glass for a metered pass.
+          </div>
+          <button class="bg-btn" id="bgBtn" type="button" disabled>break glass</button>
+          <div class="bg-foot" id="bgFoot">unlocks after the pause</div>
+        </div>
+      </div>
+
       <div class="zone">
         <span class="te-label">intercept</span>
         <span class="line"></span>
         <span class="te-fig">fig.02 &mdash; held</span>
-      </div>
-
-      <!-- urge-surf gate: the pause comes first, on purpose -->
-      <div class="surf" id="surf">
-        <div class="orb" id="orb" aria-hidden="true">
-          <span class="orb-fill"></span>
-        </div>
-        <div class="phase" id="phase">breathe in</div>
-        <button class="te-btn surf-start" id="surfStart" type="button" hidden>▶ tap to start</button>
-        <div class="timers" id="timers" hidden>
-          <div class="tchip" id="tInhale"><span class="tl">inhale</span><span class="tv" id="tvInhale">0.0s</span></div>
-          <div class="tchip" id="tHold"><span class="tl">hold</span><span class="tv" id="tvHold">0.0s</span></div>
-          <div class="tchip" id="tExhale"><span class="tl">exhale</span><span class="tv" id="tvExhale">0.0s</span></div>
-        </div>
-        <div class="meter" id="meter" hidden>
-          <div class="meter-track"><i class="meter-fill" id="meterFill"></i></div>
-          <div class="meter-read"><span id="db">&mdash;</span>&nbsp;dB &middot; keep your mic close</div>
-        </div>
-        <div class="score" id="score" hidden>
-          <div class="score-n"><span id="scoreN">0</span><span class="score-d">/100</span></div>
-          <div class="score-v" id="scoreV">&mdash;</div>
-        </div>
-        <div class="sub" id="surfSub">
-          the urge crests and fades like a wave. sit with it &mdash;
-          <span class="count" id="count">12</span>s.
-        </div>
-        <div class="diag" id="diag" hidden>&mdash;</div>
       </div>
 
       <div class="headline">NOT WORTH IT</div>

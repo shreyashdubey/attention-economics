@@ -12,7 +12,6 @@ const DEFAULTS = {
   ],
   summaryTime: "21:00", // when the daily summary notification fires
   minutesPerBlock: 12, // estimate: minutes a single intercepted visit would cost
-  breathLock: false, // require one mic-validated breath to release the block-screen pause
   sites: [
     // streaming / piracy
     "youtube.com",
@@ -48,6 +47,30 @@ const PRODUCTIVITY = new Set([
   "leetcode.com", "developer.mozilla.org", "npmjs.com", "stackblitz.com",
   "hostinger.com", "razorpay.com", "dbeaver.io", "groq.com", "cursor.com",
 ]);
+
+// ---- emergency access ("break glass") -----------------------------------
+// A metered escape hatch. When you genuinely need a blocked site you can unlock
+// it for a fixed budget — but the budget SHRINKS the more addicted you are to
+// that specific site, and you get exactly one pass per site per day. Severity is
+// derived automatically from how much you reach for the site (see emergencyScore).
+const EMERGENCY = {
+  maxPerSitePerDay: 1,
+  // Tiers are checked high → low; the first whose minScore you clear wins.
+  // minScore is in weekly "minute-equivalents": active minutes you spent on the
+  // site + minutesPerBlock charged for every intercept the guard had to make.
+  tiers: [
+    { id: "severe", label: "severe", minScore: 300, budgetMin: 10 },
+    { id: "moderate", label: "moderate", minScore: 90, budgetMin: 30 },
+    { id: "mild", label: "mild", minScore: 0, budgetMin: 60 },
+  ],
+};
+
+function severityFor(score) {
+  return (
+    EMERGENCY.tiers.find((t) => score >= t.minScore) ||
+    EMERGENCY.tiers[EMERGENCY.tiers.length - 1]
+  );
+}
 
 // ---- settings -----------------------------------------------------------
 
@@ -128,13 +151,199 @@ function todayKey(d = new Date()) {
   return `${y}-${m}-${day}`;
 }
 
+// Day-keys for the last n days, used to prune day-keyed maps.
+function keepDays(n) {
+  const keep = new Set();
+  const now = new Date();
+  for (let i = 0; i < n; i++) {
+    const d = new Date(now);
+    d.setDate(now.getDate() - i);
+    keep.add(todayKey(d));
+  }
+  return keep;
+}
+
+function pruneDayMap(map, days) {
+  const keep = keepDays(days);
+  for (const k of Object.keys(map)) if (!keep.has(k)) delete map[k];
+  return map;
+}
+
 async function recordIntercept(site) {
-  const { stats = { byDay: {}, bySite: {} } } =
+  const { stats = { byDay: {}, bySite: {}, bySiteDay: {} } } =
     await chrome.storage.local.get("stats");
   const key = todayKey();
   stats.byDay[key] = (stats.byDay[key] || 0) + 1;
   stats.bySite[site] = (stats.bySite[site] || 0) + 1;
+  // per-site-per-day intercepts feed the emergency severity score below.
+  stats.bySiteDay = stats.bySiteDay || {};
+  stats.bySiteDay[key] = stats.bySiteDay[key] || {};
+  stats.bySiteDay[key][site] = (stats.bySiteDay[key][site] || 0) + 1;
+  pruneDayMap(stats.bySiteDay, USAGE_RETENTION_DAYS);
   await chrome.storage.local.set({ stats });
+}
+
+// ---- emergency access: scoring, passes, budget --------------------------
+
+// A site's weekly "addiction score" = active minutes you actually spent on it +
+// a minutesPerBlock charge for every time the guard had to intercept it. Both
+// signals are already tracked. Pairing them matters: a blocked site accrues
+// almost no direct usage, so the intercept count carries the signal instead.
+async function emergencyScore(site) {
+  const settings = await getSettings();
+  const { usage = {} } = await chrome.storage.local.get("usage");
+  const { stats = {} } = await chrome.storage.local.get("stats");
+  const bySiteDay = stats.bySiteDay || {};
+  const perBlock = settings.minutesPerBlock || 12;
+
+  let activeSec = 0;
+  let intercepts = 0;
+  for (const day of last7Keys()) {
+    const u = usage[day] || {};
+    for (const [d, s] of Object.entries(u)) {
+      if (d === site || hostMatchesSite(d, site)) activeSec += s;
+    }
+    intercepts += (bySiteDay[day] || {})[site] || 0;
+  }
+  return Math.round(activeSec / 60 + perBlock * intercepts);
+}
+
+// Returns the live pass for a site, or null. Self-heals an expired one.
+async function activePass(site) {
+  const { emergencyPasses = {} } = await chrome.storage.local.get("emergencyPasses");
+  const p = emergencyPasses[site];
+  if (p && Date.now() < p.expiresAt) return p;
+  if (p) {
+    delete emergencyPasses[site];
+    await chrome.storage.local.set({ emergencyPasses });
+  }
+  return null;
+}
+
+async function emergencyUsedToday(site) {
+  const { emergencyUses = {} } = await chrome.storage.local.get("emergencyUses");
+  return (emergencyUses[todayKey()] || {})[site] || 0;
+}
+
+// Everything the blocked page / console need to render the break-glass control.
+async function getEmergencyInfo(site) {
+  const score = await emergencyScore(site);
+  const tier = severityFor(score);
+  const usedToday = await emergencyUsedToday(site);
+  const pass = await activePass(site);
+  return {
+    site,
+    tier: tier.id,
+    tierLabel: tier.label,
+    budgetMin: tier.budgetMin,
+    usedToday,
+    maxPerDay: EMERGENCY.maxPerSitePerDay,
+    activeUntil: pass ? pass.expiresAt : null,
+    allowed: !pass && usedToday < EMERGENCY.maxPerSitePerDay,
+    score,
+  };
+}
+
+async function grantEmergency(site, reason) {
+  const info = await getEmergencyInfo(site);
+  if (!info.allowed) {
+    return { ok: false, reason: info.activeUntil ? "active" : "cap", info };
+  }
+  const now = Date.now();
+  const expiresAt = now + info.budgetMin * 60000;
+
+  const { emergencyPasses = {} } = await chrome.storage.local.get("emergencyPasses");
+  emergencyPasses[site] = {
+    expiresAt,
+    grantedAt: now,
+    budgetMin: info.budgetMin,
+    tier: info.tier,
+    reason: String(reason || "").slice(0, 200),
+  };
+  await chrome.storage.local.set({ emergencyPasses });
+
+  const { emergencyUses = {} } = await chrome.storage.local.get("emergencyUses");
+  const key = todayKey();
+  emergencyUses[key] = emergencyUses[key] || {};
+  emergencyUses[key][site] = (emergencyUses[key][site] || 0) + 1;
+  pruneDayMap(emergencyUses, USAGE_RETENTION_DAYS);
+  await chrome.storage.local.set({ emergencyUses });
+
+  chrome.alarms.create("emergend::" + site, { when: expiresAt });
+  await updateBadge();
+  return { ok: true, expiresAt, budgetMin: info.budgetMin, tier: info.tier };
+}
+
+// Pass elapsed: drop it, re-block any tab still parked on the site, notify once.
+async function endEmergency(site) {
+  const { emergencyPasses = {} } = await chrome.storage.local.get("emergencyPasses");
+  const had = !!emergencyPasses[site];
+  if (had) {
+    delete emergencyPasses[site];
+    await chrome.storage.local.set({ emergencyPasses });
+  }
+  await updateBadge();
+
+  const settings = await getSettings();
+  if (settings.enabled && activeWindow(settings.windows)) {
+    const tabs = await chrome.tabs.query({});
+    for (const tab of tabs) {
+      if (
+        tab.id != null &&
+        tab.url &&
+        findBlockedSite(tab.url, settings.sites) === site
+      ) {
+        maybeBlock(tab.id, tab.url);
+      }
+    }
+  }
+  if (had) {
+    chrome.notifications.create("emerg-end::" + site + "::" + todayKey(), {
+      type: "basic",
+      iconUrl: "icons/icon128.png",
+      title: "Emergency time's up",
+      message: `${site} is locked again. That was your one pass for today — back to it.`,
+      priority: 2,
+    });
+  }
+}
+
+// Toolbar badge shows whole minutes left on the soonest-expiring pass.
+async function updateBadge() {
+  const { emergencyPasses = {} } = await chrome.storage.local.get("emergencyPasses");
+  const now = Date.now();
+  let soonest = null;
+  let changed = false;
+  for (const [site, p] of Object.entries(emergencyPasses)) {
+    if (now < p.expiresAt) {
+      if (soonest == null || p.expiresAt < soonest) soonest = p.expiresAt;
+    } else {
+      delete emergencyPasses[site];
+      changed = true;
+    }
+  }
+  if (changed) await chrome.storage.local.set({ emergencyPasses });
+  try {
+    if (soonest == null) {
+      await chrome.action.setBadgeText({ text: "" });
+    } else {
+      const minLeft = Math.max(1, Math.ceil((soonest - now) / 60000));
+      await chrome.action.setBadgeBackgroundColor({ color: "#fe5000" });
+      await chrome.action.setBadgeText({ text: String(minLeft) });
+    }
+  } catch (e) {
+    /* action API unavailable */
+  }
+}
+
+// All blocked sites with their current tier/budget — for the console overview.
+async function emergencyOverview() {
+  const settings = await getSettings();
+  const out = [];
+  for (const site of settings.sites) out.push(await getEmergencyInfo(site));
+  const rank = { severe: 0, moderate: 1, mild: 2 };
+  out.sort((a, b) => rank[a.tier] - rank[b.tier] || b.score - a.score);
+  return out;
 }
 
 // ---- blocking -----------------------------------------------------------
@@ -159,6 +368,9 @@ async function maybeBlock(tabId, url) {
 
   const site = findBlockedSite(url, settings.sites);
   if (!site) return;
+
+  // An active break-glass pass lets the site through until it expires.
+  if (await activePass(site)) return;
 
   await recordIntercept(site);
   await chrome.tabs.update(tabId, {
@@ -367,6 +579,24 @@ async function checkAndSuggest() {
   await chrome.storage.local.set({ alerted: [...alerted, target.domain] });
 }
 
+// ---- messages from blocked page / console -------------------------------
+
+chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
+  if (!msg || !msg.type) return;
+  if (msg.type === "emergencyInfo") {
+    getEmergencyInfo(msg.site).then(sendResponse);
+    return true; // async response
+  }
+  if (msg.type === "grantEmergency") {
+    grantEmergency(msg.site, msg.reason).then(sendResponse);
+    return true;
+  }
+  if (msg.type === "emergencyOverview") {
+    emergencyOverview().then(sendResponse);
+    return true;
+  }
+});
+
 chrome.notifications.onButtonClicked.addListener(async (id, idx) => {
   if (!id.startsWith("suggest::")) return;
   const domain = id.slice("suggest::".length);
@@ -423,6 +653,7 @@ async function init() {
   const settings = await getSettings();
   scheduleDailySummary(settings.summaryTime);
   rescanAllTabs();
+  updateBadge();
 }
 
 chrome.runtime.onInstalled.addListener(init);
@@ -432,10 +663,14 @@ chrome.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name === "rescan") {
     rescanAllTabs();
     usageTick();
+    updateBadge(); // keeps the break-glass countdown ticking down
   }
   if (alarm.name === "dailySummary") {
     showDailySummary();
     checkAndSuggest();
+  }
+  if (alarm.name.startsWith("emergend::")) {
+    endEmergency(alarm.name.slice("emergend::".length));
   }
 });
 
