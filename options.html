@@ -264,6 +264,18 @@
         <div class="hint">Used only to estimate "time reclaimed" on the monitor above.</div>
       </div>
 
+      <div class="module">
+        <div class="module-head"><span class="te-label">05 / breath-lock</span><span class="te-fig">mic &middot; offline</span></div>
+        <div class="enable-row">
+          <div>
+            <span class="t">breath-lock the pause</span>
+            <span class="te-label">block screen waits for one real breath &middot; mic never leaves this device</span>
+          </div>
+          <input type="checkbox" id="breathLock" class="te-switch" />
+        </div>
+        <div class="hint">Used only on the block screen, processed locally &mdash; no recording, nothing sent anywhere; the track stops the instant the breath completes. Keep your mic close and exhale toward it. Falls back to a timed pause if the mic is unavailable.</div>
+      </div>
+
       <div class="save-row">
         <button class="te-btn" id="save">save settings</button>
         <span class="status" id="status">&#10003; saved &mdash; reload monitor to refresh</span>

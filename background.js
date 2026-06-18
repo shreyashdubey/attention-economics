@@ -12,6 +12,7 @@ const DEFAULTS = {
   ],
   summaryTime: "21:00", // when the daily summary notification fires
   minutesPerBlock: 12, // estimate: minutes a single intercepted visit would cost
+  breathLock: false, // require one mic-validated breath to release the block-screen pause
   sites: [
     // streaming / piracy
     "youtube.com",
